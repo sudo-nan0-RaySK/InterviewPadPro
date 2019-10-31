@@ -7,6 +7,7 @@ const uniqueKey = require('unique-key');
 const Interview = require('../models/interview.model');
 const User = require('../models/user.model');
 const Question = require('../models/question.model');
+const QuestionBank = require('../models/questionbank.model');
 
 /* GET home page. */
 router.get('/', async function (req, res, next) {
@@ -78,7 +79,7 @@ router.post('/addUser', async (req, res, next) => {
 	}
 });
 
-router.post('/addQuestion/:id', async (req, res, next) => {
+router.post('/addQuestion', async (req, res, next) => {
 	try {
 		const { title, timeLimit, description, testCases, tags } = req.body;
 		if (title == undefined) {
@@ -93,8 +94,7 @@ router.post('/addQuestion/:id', async (req, res, next) => {
 		if (testCases == undefined) {
 			throw 'title parameter is empty'
 		}
-		const link = req.params['id']
-		let savedQues = await Question.create({ title, timeLimit, description, testCases, tags, link });
+		let savedQues = await Question.create({ title, timeLimit, description, testCases, tags });
 		console.log(savedQues)
 		res.send({
 			success: true,
@@ -102,22 +102,6 @@ router.post('/addQuestion/:id', async (req, res, next) => {
 		});
 	} catch (exception) {
 		res.status(500).json({ success: false, message: exception });
-	}
-});
-
-/* GET an interview by unique link */
-router.get('/getInterview/:id', async (req, res, next) => {
-	try {
-		let interviewDetails = await Interview.findOne({ link: req.params['id'] });
-		res.status(200).json({
-			success: true,
-			message: interviewDetails
-		});
-	} catch (exception) {
-		res.json({
-			success: false,
-			message: exception
-		});
 	}
 });
 
@@ -135,17 +119,40 @@ router.post('/attemptInterview/:id', async (req, res, next) => {
 			if (foundUser === undefined) {
 				throw 'Invalid password'
 			} else {
-				//TODO replace with question bank ordering
-				res.json({ success: true });
+				let gotQuestion = await QuestionBank.findOne({ interviewName: gotInterview.name, serialNumber: 1 });
+				res.json({
+					success: true,
+					questionData: gotQuestion
+				});
 			}
 		} else {
 			throw "Invalid Username";
 		}
 	} catch (exception) {
-		res.json({
+		res.status(500).json({
 			success: false,
 			message: exception
 		});
+	}
+});
+
+/*GET next question */
+router.post('/getQuestion', async (req, res, next) => {
+	const { interview, questionNumber } = req.body;
+	try {
+		let questionRef = await QuestionBank.findOne({ interviewName: interview, serialNumber: questionNumber });
+		if (questionRef === undefined) { throw 'Question Not Found!'; }
+		let gotQuestion = await Question.findOne({ title: questionRef.questionName });
+		if (questionRef === undefined) { throw 'Internal server error while fetching question'; }
+		res.json({
+			success: true,
+			questionData: gotQuestion
+		});
+	} catch (exception) {
+		res.status(500).json({
+			success: false,
+			error: exception
+		})
 	}
 });
 

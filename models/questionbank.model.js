@@ -6,7 +6,8 @@ const QuestionBankSchema = new mongoose.Schema({
 	quetionName: { type: String, required: true, unique: true },
 	serialNumber: { type: Number, required: true, unique: true },
 	testCasesPassed: { type: Number, required: true },
-	score: { type: Number, required: true }
+	score: { type: Number, required: true },
+	isLast: {type:Boolean, required: true}
 });
 
 QuestionBankSchema.plugin(uniqueValidator);
