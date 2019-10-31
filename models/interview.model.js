@@ -1,10 +1,11 @@
 const mongoose = require('mongoose');
-var uniqueValidator = require('mongoose-unique-validator')
+var uniqueValidator = require('mongoose-unique-validator');
 
 const InterviewSchema = new mongoose.Schema({
     name: { type: String, required: true, unique: true, index: true },
     interviewer: { type: String, required: true, index: true },
-    description: { type: String, required: true }
+    description: { type: String, required: true },
+    link: {type:String, required:true, unique:true}
 });
 
 InterviewSchema.plugin(uniqueValidator);
