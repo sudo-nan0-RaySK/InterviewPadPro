@@ -1,7 +1,9 @@
 var express = require('express');
 var router = express.Router();
 const SanityCheck = require('../utils/sanityCheck');
+const Compiler = require('../utils/compiler');
 const uniqueKey = require('unique-key');
+const fs = require('fs');
 
 //Database Models
 const Interview = require('../models/interview.model');
@@ -81,20 +83,31 @@ router.post('/addUser', async (req, res, next) => {
 
 router.post('/addQuestion', async (req, res, next) => {
 	try {
-		const { title, timeLimit, description, testCases, tags } = req.body;
+		const { title, timeLimit, tags } = req.body;
+		const questionFile = req.files.quesFile;
+		const testCaseFile = req.files.testCaseFile;
+		const ansFile = req.files.ansFile;
+		let savedQues;
+
 		if (title == undefined) {
 			throw 'title parameter is empty'
 		}
 		if (timeLimit == undefined) {
 			throw 'timeLimit parameter is empty'
 		}
-		if (description == undefined) {
-			throw 'description parameter is empty'
-		}
-		if (testCases == undefined) {
-			throw 'title parameter is empty'
-		}
-		let savedQues = await Question.create({ title, timeLimit, description, testCases, tags });
+		//File upload
+		let fileData = fs.readFileSync(questionFile.tempFilePath, 'utf-8');
+		let testData = fs.readFileSync(testCaseFile.tempFilePath, 'utf-8');
+		let ansData = fs.readFileSync(ansFile.tempFilePath, 'utf-8');
+		fs.writeFileSync('/Users/Development/IWP_Lab/InterviewPad/static/' + title + '.html', fileData);
+		fs.writeFileSync('/Users/Development/IWP_Lab/InterviewPad/static/test/' + title + '.txt', testData);
+		fs.writeFileSync('/Users/Development/IWP_Lab/InterviewPad/static/ans/' + title + '.txt', ansData);
+
+		if (tags === undefined)
+			savedQues = await Question.create({ title, timeLimit });
+		else
+			savedQues = await Question.create({ title, timeLimit, tags });
+
 		console.log(savedQues)
 		res.send({
 			success: true,
@@ -155,5 +168,15 @@ router.post('/getQuestion', async (req, res, next) => {
 		})
 	}
 });
+
+/*POST compile and test code */
+router.post('/compileCode', (req, res, next) => {
+	const { interviewName, questionName, program, language, code } = req.body;
+	const spawn = require('child_process').spawnSync
+	fs.writeFileSync('/Users/Development/IWP_Lab/InterviewPad/tmp/file.py', code);
+	let op = spawn('python3', ['/Users/Development/IWP_Lab/InterviewPad/tmp/file.py']);
+	console.log(op.stdout.toString());
+	res.json({ success: true, op: op });
+})
 
 module.exports = router;
