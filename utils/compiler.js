@@ -32,11 +32,23 @@ class Compiler{
         with char s followed by number of test cases
 ================================================================================*/
 
+    compilePython() {
+        fs.writeFileSync('/Users/Development/IWP_Lab/InterviewPad/tmp/file.py', code);
+        let op = spawn('python3', [`/Users/Development/IWP_Lab/InterviewPad/tmp/file.py < ${this.testAddress}`]);
+        let err = op.stderr.toString();
+        if (err.length > 1) {
+            return {success:false, err:err}
+        } 
+        let userOP = op.stdout.toString();
+        return { success: true, userOP: userOP };
+    }
+
     compileCPP() {
-        const gcc = spawn('g++', [this.code,'<',this.testAddress]);
-        const result = gcc.stdout;
-        //TODO TC checking
-        return result;
+        return 
+    }
+
+    compileJS() {
+        return
     }
 }
 
