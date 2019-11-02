@@ -1,11 +1,11 @@
 import sys
-
-
-def factorial(n):
-    if n <= 1:
-        return n
-    else:
-        return n*(factorial(n-1))
+        
+def isPrime(n):
+    count =0
+    for i in range(1, n):
+        if n % i == 0:
+            count += 1
+    return 'Yes' if count == 1 else 'No'
 
 
 fd = open(sys.argv[1], 'r')
@@ -14,4 +14,4 @@ fcontent = fd.read().split('\n')
 t = int(fcontent[0])
 
 for _ in range(1, t + 1):
-    print(factorial(int(fcontent[_])))
+    print(isPrime(int(fcontent[_])))
