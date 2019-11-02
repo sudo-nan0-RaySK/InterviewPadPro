@@ -83,7 +83,7 @@ router.post('/addUser', async (req, res, next) => {
 
 router.post('/addQuestion', async (req, res, next) => {
 	try {
-		const { title, timeLimit, tags } = req.body;
+		const { title, timeLimit, tags, testCases } = req.body;
 		const questionFile = req.files.quesFile;
 		const testCaseFile = req.files.testCaseFile;
 		const ansFile = req.files.ansFile;
@@ -95,6 +95,9 @@ router.post('/addQuestion', async (req, res, next) => {
 		if (timeLimit == undefined) {
 			throw 'timeLimit parameter is empty'
 		}
+		if (testCases == undefined) {
+			throw 'testCases parameter is empty'
+		}
 		//File upload
 		let fileData = fs.readFileSync(questionFile.tempFilePath, 'utf-8');
 		let testData = fs.readFileSync(testCaseFile.tempFilePath, 'utf-8');
@@ -104,9 +107,9 @@ router.post('/addQuestion', async (req, res, next) => {
 		fs.writeFileSync('/Users/Development/IWP_Lab/InterviewPad/static/ans/' + title + '.txt', ansData);
 
 		if (tags === undefined)
-			savedQues = await Question.create({ title, timeLimit });
+			savedQues = await Question.create({ title, timeLimit, testCases });
 		else
-			savedQues = await Question.create({ title, timeLimit, tags });
+			savedQues = await Question.create({ title, timeLimit, tags, testCases });
 
 		console.log(savedQues)
 		res.send({
@@ -171,12 +174,17 @@ router.post('/getQuestion', async (req, res, next) => {
 
 /*POST compile and test code */
 router.post('/compileCode', (req, res, next) => {
-	const { interviewName, questionName, program, language, code } = req.body;
-	const spawn = require('child_process').spawnSync
-	fs.writeFileSync('/Users/Development/IWP_Lab/InterviewPad/tmp/file.py', code);
-	let op = spawn('python3', ['/Users/Development/IWP_Lab/InterviewPad/tmp/file.py']);
-	console.log(op.stdout.toString());
-	res.json({ success: true, op: op });
+	try {
+		const { interviewName, questionName, program, language, code } = req.body;
+		const OJ = new Compiler(language, code,
+			`/Users/Development/IWP_Lab/InterviewPad/static/test/` + questionName + `.txt`,
+			`/Users/Development/IWP_Lab/InterviewPad/static/ans/` + questionName + `.txt`,
+		);
+		var userOutput = OJ.compile();
+		res.json(userOutput);
+	} catch (Exp) {
+		res.json({ success: false, error: { message: Exp.message, stack: Exp.stack } });
+	}
 })
 
 module.exports = router;

@@ -5,6 +5,7 @@ const QuestionSchema = new mongoose.Schema({
     title: { type: String, required: true, unique: true, index: true },
     timeLimit: { type: Number, required: true },
     tags: { type: String, default: "Misc" },
+    testCases: {type:Number, required:true}
 });
 
 QuestionSchema.plugin(uniqueValidator);
