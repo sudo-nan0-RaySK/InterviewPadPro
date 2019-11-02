@@ -151,7 +151,7 @@ router.post('/attemptInterview/:id', async (req, res, next) => {
 	}
 });
 
-/*GET next question  -> Checked*/
+/*GET next question  -> Checked */
 router.post('/getQuestion', async (req, res, next) => {
 	const { interview, questionNumber } = req.body;
 	try {
