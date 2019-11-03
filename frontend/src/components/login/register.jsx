@@ -30,20 +30,20 @@ export class Register extends React.Component {
             <div className="form-group">
             <label htmlFor="type">Type</label>
             <select>
-                  <option value="recruiter">Recruiter</option>
-                  <option value="candidate">Candidate</option>
+                  <option value="1">Recruiter</option>
+                  <option value="2">Candidate</option>
             </select>
             </div>
             <div className="form-group">
             <label htmlFor="image">Upload Image</label>
             <input type="file" name="fileToUpload" id="fileToUpload"/>
             </div>
-          </div>
-        </div>
-        <div className="footer">
-          <button type="button" className="btn">
+            <div className="form-group">
+            <button type="button" className="btn">
             Register
           </button>
+            </div>
+          </div>
         </div>
       </div>
     );

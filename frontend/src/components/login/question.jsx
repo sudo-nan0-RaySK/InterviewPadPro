@@ -1,5 +1,5 @@
 import React from "react";
-export class Interview extends React.Component {
+export class Question extends React.Component {
     constructor(props) {
       super(props);
     }
@@ -7,32 +7,32 @@ export class Interview extends React.Component {
     render() {
       return (
         <div className="base-container" ref={this.props.containerRef}>
-          <div className="header">Add Interview</div>
+          <div className="header">Add Question</div>
           <div className="content">
             <div className="form">
               <div className="form-group">
-                <label htmlFor="name">Name</label>
-                <input type="text" name="fname" placeholder="name" />
+                <label htmlFor="Title">Title</label>
+                <input type="text" name="Title" placeholder="Title" />
               </div>
               <div className="form-group">
-                <label htmlFor="Interviewer">Interviewer</label>
-                <input type="text" name="Interviewer" placeholder="Interviewer" />
+                <label htmlFor="Time">Time Limit (s)</label>
+                <input type="number" name="Time" placeholder="Time" />
               </div>
               <div className="form-group">
-                <label htmlFor="Candidate">Candidate</label>
-                <input type="text" name="Candidate" />
+                <label htmlFor="Tags">Tags</label>
+                <input type="text" name="Tags" />
               </div>
               <div className="form-group">
-                <label htmlFor="Description">Description</label>
-                <input type="text" name="Description" />
+                <label htmlFor="TestCases">Test Cases (number)</label>
+                <input type="number" name="TestCases" />
               </div>
               <div className="form-group">
-                <label htmlFor="link">Link</label>
-                <input type="url" name="link" placeholder="link" />
+              <label htmlFor="questionfile">Upload File</label>
+            <input type="file" name="fileToUpload" id="fileToUpload"/>
               </div>
               <div className="form-group">
             <button type="button" className="btn">
-            Interview
+            Add Question
           </button>
             </div>
             </div>
