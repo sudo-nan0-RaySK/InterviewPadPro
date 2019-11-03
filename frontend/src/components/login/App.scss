@@ -1,22 +1,54 @@
-//Custom Fonts
-@import url("https://fonts.googleapis.com/css?family=Open+Sans&display=swap");
-
 .App {
+  color: orange;
   text-align: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-family: "Open Sans", sans-serif;
+  /*background-color: #403f40;*/
+  /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#393c3f+50,d8f0fc+50,393c3f+50,393c3f+50,393c3f+51,b8e2f6+51,6d3bbd+51,6d3bbd+51,6d3bbd+61 */
+  background: rgb(56, 53, 53); /* Old browsers */
+  background: -moz-linear-gradient(
+    top,
+    #393c3f 50%,
+    #d8f0fc 50%,
+    #393c3f 50%,
+    #393c3f 50%,
+    #393c3f 51%,
+    #b8e2f6 51%,
+    #6d3bbd 51%,
+    #6d3bbd 51%,
+    #6d3bbd 61%
+  ); /* FF3.6-15 */
+  background: -webkit-linear-gradient(
+    top,
+    rgb(56, 53, 53) 50%,
+    #d8f0fc 50%,
+    rgb(56, 53, 53) 50%,
+    rgb(56, 53, 53) 50%,
+    rgb(56, 53, 53) 51%,
+    #b8e2f6 51%,
+    #6d3bbd 51%,
+    #6d3bbd 51%,
+    #6d3bbd 61%
+  ); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(
+    to bottom,
+    #393c3f 50%,
+    #d8f0fc 50%,
+    #393c3f 50%,
+    #393c3f 50%,
+    #393c3f 51%,
+    #b8e2f6 51%,
+    #6d3bbd 51%,
+    #6d3bbd 51%,
+    #6d3bbd 61%
+  ); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#393c3f', endColorstr='#6d3bbd',GradientType=0 ); /* IE6-9 */
 }
 
 .App-logo {
-  animation: App-logo-spin infinite 20s linear;
   height: 40vmin;
-  pointer-events: none;
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: #403f40;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -27,99 +59,33 @@
 }
 
 .App-link {
-  color: #61dafb;
+  color: #09d3ac;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.IDE-Container {
+  border-radius: 2%;
+  margin-top: 2%;
+  margin-left: 5.5%;
 }
 
-//Login Main Container
-.login {
-  width: 27em;
-  height: 40em;
-  //min-height: 44em;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 5px;
-  position: relative;
-  z-index: 99;
-  .container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color:rgb(200, 148, 157);
-    box-shadow: 0px 0px 12px 2px rgba(15, 15, 15, 0.2);
-    border-radius: 4px;
-    position: relative;
-    z-index: 99;
-    width: 100%;
-    height: 100%;
-    z-index: 99;
-    padding: 17px 10px;
-    //transition: transform 200ms ease-in-out;
-  }
-  .right-side {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    height: 90%;
-    background-color: purple;
-    width: 100%;
-    position: absolute;
-    right: -34%;
-    border-radius: 6px;
-    z-index: 1;
-    transition: all 400ms ease-in-out;
-    cursor: pointer;
-    box-shadow: 0px 0px 12px 2px rgba(15, 15, 15, 0.281);
-
-    &.right {
-      right: -40%;
-      align-items: flex-end;
-      &:hover {
-        right: -45%;
-      }
-    }
-    &.left {
-      right: 40%;
-      align-items: flex-start;
-      &:hover {
-        right: 45%;
-      }
-    }
-
-    .text {
-      font-size: 21px;
-      font-weight: 500;
-      color: #fff;
-      margin-right: 3em;
-      margin-left: 3em;
-    }
-  }
+#editor-pane {
+  text-align: left;
+  height: 100vh;
 }
 
-
-//Button
-.btn {
-  font-size: 21px;
-  padding: 5px 20px;
-  border: 0;
-  background-color:blue;
-  color: #fff;
-  border-radius: 3px;
-  transition: all 250ms ease-in-out;
-  cursor: pointer;
-  &:hover {
-    background-color: #2386c8;
-  }
-  &:focus {
-    outline: none;
-  }
+#button {
+  box-shadow: 0px 7px 14px -7px #276873;
+	background:linear-gradient(to bottom, #599bb3 5%, #408c99 100%);
+	background-color:#599bb3;
+	border-radius:13px;
+	border:2px solid #29668f;
+  display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:14px;
+	font-weight:bold;
+	padding:3px 12px;
+	text-decoration:none;
+  text-shadow:0px 1px 0px #3d768a; 
 }
