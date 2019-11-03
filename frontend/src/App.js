@@ -4,9 +4,9 @@ import './App.css';
 import Nav from './components/Nav';
 import MonacoEditor from 'react-monaco-editor';
 import * as monaco from 'monaco-editor';
-
+import socketIOClient from "socket.io-client";
+let socket;
 export default class App extends React.Component {
-
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -14,9 +14,11 @@ export default class App extends React.Component {
 			class Sol{
         		public static void main(String args[]){
           		System.out.println();
-        	}
-      }`
+        		}
+			  }`,
+			endpoint: "http://localhost:3001/"
 		}
+		socket = socketIOClient(this.state.endpoint);
 		this.handleChange = this.handleChange.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
 	}
@@ -30,6 +32,119 @@ export default class App extends React.Component {
 	editorDidMount(editor, monaco) {
 		console.log('editorDidMount', editor);
 		editor.focus();
+		let Peer = require('simple-peer')
+		const video = document.querySelector('video')
+		const checkboxTheme = document.querySelector('#theme')
+		let client = {}
+		let currentFilter;
+		//get stream
+		navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+			.then(stream => {
+				socket.emit('NewClient')
+				video.srcObject = stream
+				video.play()
+				//used to initialize a peer
+				function InitPeer(type) {
+					let peer = new Peer({ initiator: (type == 'init') ? true : false, stream: stream, trickle: false })
+					peer.on('stream', function (stream) {
+						CreateVideo(stream)
+					})
+					//This isn't working in chrome; works perfectly in firefox.
+					// peer.on('close', function () {
+					//     document.getElementById("peerVideo").remove();
+					//     peer.destroy()
+					// })
+					// peer.on('data', function (data) {
+					// 	let decodedData = new TextDecoder('utf-8').decode(data)
+					// 	let peervideo = document.querySelector('#peerVideo')
+					// 	peervideo.style.filter = decodedData
+					// })
+					return peer
+				}
+				//for peer of type init
+				function MakePeer() {
+					client.gotAnswer = false
+					let peer = InitPeer('init')
+					peer.on('signal', function (data) {
+						if (!client.gotAnswer) {
+							socket.emit('Offer', data)
+						}
+					})
+					client.peer = peer
+				}
+
+				//for peer of type not init
+				function FrontAnswer(offer) {
+					let peer = InitPeer('notInit')
+					peer.on('signal', (data) => {
+						socket.emit('Answer', data)
+					})
+					peer.signal(offer)
+					client.peer = peer
+				}
+
+				function SignalAnswer(answer) {
+					client.gotAnswer = true
+					let peer = client.peer
+					peer.signal(answer)
+				}
+
+				function CreateVideo(stream) {
+					CreateDiv()
+
+					let video = document.createElement('video')
+					video.id = 'peerVideo'
+					video.srcObject = stream
+					video.setAttribute('class', 'embed-responsive-item')
+					document.querySelector('#peerDiv').appendChild(video)
+					video.play()
+					//wait for 1 sec
+					setTimeout(() => SendFilter(currentFilter), 1000)
+
+					video.addEventListener('click', () => {
+						if (video.volume != 0)
+							video.volume = 0
+						else
+							video.volume = 1
+					})
+
+				}
+
+				function SessionActive() {
+					document.write('Session Active. Please come back later')
+				}
+
+				function SendFilter(filter) {
+					if (client.peer) {
+						client.peer.send(filter)
+					}
+				}
+
+				function RemovePeer() {
+					document.getElementById("peerVideo").remove();
+					document.getElementById("muteText").remove();
+					if (client.peer) {
+						client.peer.destroy()
+					}
+				}
+
+				function CreateDiv() {
+					let div = document.createElement('div')
+					div.setAttribute('class', "centered")
+					div.id = "muteText"
+					div.innerHTML = "Click to Mute/Unmute"
+					document.querySelector('#peerDiv').appendChild(div)
+					
+				}
+
+				socket.on('BackOffer', FrontAnswer)
+				socket.on('BackAnswer', SignalAnswer)
+				socket.on('SessionActive', SessionActive)
+				socket.on('CreatePeer', MakePeer)
+				socket.on('Disconnect', RemovePeer)
+
+			})
+			.catch(err => document.write(err))
 	}
 	onChange(newValue, e) {
 		console.log('onChange', newValue, e);
@@ -95,6 +210,22 @@ export default class App extends React.Component {
 							onChange={this.onChange}
 							editorDidMount={this.editorDidMount}
 						/>
+					</div>
+					<div className="container-fluid">
+						<div className="row h-10 w-10">
+							<div className="col-6 col-sm-3 d-flex justify-content-center">WebRTC View</div>
+						</div>
+						<div className="row h-50 w-50">
+							<div className="col-6 col-sm-3 d-flex justify-content-center">
+								<div className="embed-responsive embed-responsive-16by9">
+									<video className="embed-responsive-item" muted></video>
+								</div>
+							</div>
+							<div className="col-6 col-sm-3 d-flex justify-content-center">
+								<div id="peerDiv" className="embed-responsive embed-responsive-16by9">
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
