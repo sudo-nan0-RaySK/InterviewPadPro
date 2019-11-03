@@ -1,4 +1,5 @@
 .App {
+  color: orange;
   text-align: center;
   /*background-color: #403f40;*/
   /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#393c3f+50,d8f0fc+50,393c3f+50,393c3f+50,393c3f+51,b8e2f6+51,6d3bbd+51,6d3bbd+51,6d3bbd+61 */
@@ -70,4 +71,21 @@
 #editor-pane {
   text-align: left;
   height: 100vh;
+}
+
+#button {
+  box-shadow: 0px 7px 14px -7px #276873;
+	background:linear-gradient(to bottom, #599bb3 5%, #408c99 100%);
+	background-color:#599bb3;
+	border-radius:13px;
+	border:2px solid #29668f;
+  display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:14px;
+	font-weight:bold;
+	padding:3px 12px;
+	text-decoration:none;
+  text-shadow:0px 1px 0px #3d768a; 
 }

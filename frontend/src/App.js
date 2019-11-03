@@ -196,7 +196,7 @@ export default class App extends React.Component {
 									<option value="python">Python</option>
 									<option value="c++">C++</option>
 								</select>
-			               	 <input type = "submit" name = "submitcode" value = "Submit Code" ></input>
+			               	 <input type = "submit" id = "button" name = "submitcode" value = "Submit Code" ></input>
 							</center>
 						</label>
 					</form>
